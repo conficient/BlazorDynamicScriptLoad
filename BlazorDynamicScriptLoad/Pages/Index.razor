@@ -1,0 +1,34 @@
+﻿@page "/"
+@inject IJSRuntime jsRuntime
+
+<h1>Blazor Dynamic Script Load</h1>
+
+<p>
+    Sample written as demo in answer to [StackOverflow query](
+    https://stackoverflow.com/questions/58976579/blazor-server-load-js-scripts-only-on-certain-pages-not-on-all).
+</p>
+
+<p>
+    The <code>index.html</code> page includes a reference to the <code>scriptLoader.js</code> library, but does not load any
+    other scripts. This page uses JQuery to change the text of the H1 tag as an example. It loads the JQuery library and 
+    then the <code>myJQueryTest.js</code> interop library, and then invokes the <code>setH1</code> method on it.
+</p>
+@code
+{
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // invoke script loader
+        Console.WriteLine("Loading jQuery");
+        // note the scripts will only load once
+        await jsRuntime.InvokeVoidAsync("loadScript", "https://code.jquery.com/jquery-3.4.1.js");
+        await jsRuntime.InvokeVoidAsync("loadScript", "js/myJQueryTest.js");
+
+        Console.WriteLine("Invoking jQuery");
+
+        await jsRuntime.InvokeVoidAsync("setH1", "Hello world!");
+
+        Console.WriteLine("Invoked JQuery");
+
+        await base.OnAfterRenderAsync(firstRender);
+    }
+}
