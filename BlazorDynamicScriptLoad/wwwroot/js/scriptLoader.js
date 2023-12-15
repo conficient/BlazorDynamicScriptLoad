@@ -4,7 +4,7 @@ window.loadScript = function (scriptPath) {
     if (loaded[scriptPath]) {
         console.log(scriptPath + " already loaded");
         // return 'empty' promise
-        return new this.Promise(function (resolve, reject) {
+        return new Promise(function (resolve, reject) {
             resolve();
         });
     }
